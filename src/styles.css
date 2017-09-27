@@ -1,0 +1,140 @@
+html, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font: 1em/1.67 'Open Sans', Arial, Sans-serif;
+    margin: 0;
+    background: #e9e9e9;
+    height: 100%;
+    width: 100%;
+}
+/*
+.wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.grid {
+    align-items: stretch;
+    grid-template-columns: repeat(3, 3fr);
+    grid-template-rows: repeat(2, 50vmin);
+//grid-gap: 10px;
+    justify-content: center;
+    align-content: center;
+    overflow: hidden;
+}
+*/
+/*
+.item {
+    position: relative;
+    background: #fff;
+    box-sizing: border-box;
+    margin: 4px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-shadow: 2px 2px 4px 0 #ccc;
+    flex-grow: 1;
+//min-width: 33.3333333%;
+    min-height: 50%;
+    flex-basis: 25%
+}
+.item.size-1 {
+}
+.item.size-2 {
+    flex-basis: 58.3%;
+}
+.item.size-3 {
+    flex-basis: 100%;
+    order: -1;
+}
+.item.rs-1 {
+    grid-row: span 1;
+}
+.item.rs-2 {
+    grid-row: span 2;
+}
+.item.cs-1 {
+    grid-column: span 1;
+}
+.item.cs-2 {
+    grid-column: span 3;
+}
+.item.cs-3 {
+    grid-column: span 3;
+}
+.item.rp-1 {
+    grid-row: row 1;
+}
+.item.rp-2 {
+    grid-row: row 2;
+}
+.item.cp-1 {
+    grid-column: col 1;
+}
+.item.cp-2 {
+    grid-column: col 2;
+}
+.item.cp-3 {
+    grid-column: col 3;
+}
+.item p {
+    overflow: hidden;
+    max-width: 100%;
+    max-height: 100%;
+}
+.item p img {
+    max-width: 100%;
+}
+.item h4 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: none;
+    background-color: rgba(250, 250, 250, 0.8);
+}
+.item div.description {
+    display: none;
+    padding: 40px;
+    position: absolute;
+    background-color: rgba(250, 250, 250, 0.8);
+    border-radius: 32px 2px;
+    bottom: 1rem;
+    left: 25%;
+    width: 50%;
+}
+*/
+/*
+.item p.img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("https://kittenrescue.org/wp-content/uploads/2017/03/KittenRescue_KittenCareHandbook.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin: 0;
+}
+.item:hover div, .item:hover h4 {
+    display: block;
+    z-index: 10;
+}
+[class^="item"] {
+    border: 1px transparent solid;
+    mix-blend-mode: screen;
+}
+*/
+
+/*
+[class^="item"]:hover {
+    border: 1px white solid;
+    background-color: rgba(250, 250, 250, 0.6);
+}
+*/
