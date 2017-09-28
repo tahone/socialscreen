@@ -7,90 +7,113 @@ import classnames from 'classnames';
 @observer
 export default class Brick extends React.Component {
     static propTypes = {
-        onChange: PropTypes.func.isRequired
+        style: PropTypes.string,
+        brick: PropTypes.object.isRequired,
+        onEmbiggen: PropTypes.func.isRequired,
+        onShrunken: PropTypes.func.isRequired
+    };
+    static defaultProps = {
+        style: 'flex'
     };
 
-    @observable size = 1;
-
-    maxSize = 5;
-    brick = null;
+    @observable size = null;
 
     @action
-    embiggen() {
-        this.size < this.maxSize && this.size++;
-        this.save();
+    onEmbiggen(event) {
+        !this.size && (this.size = this.props.brick.size);
+        if (this.size < 6) {
+            switch (this.size) {
+                case 4:
+                    this.size += 2;
+                    break;
+                default:
+                    this.size++;
+            }
+        }
     }
 
     @action
-    shrunken() {
-        this.size > 1 && this.size--;
-        this.save();
-    }
-
-    save() {
-        this.props.onChange(this.brick);
-    }
-
-    isInViewport(element) {
-        const rect = element.getBoundingClientRect();
-        const html = document.documentElement;
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || html.clientHeight) &&
-            rect.right <= (window.innerWidth || html.clientWidth)
-        );
+    onShrunken(event) {
+        !this.size && (this.size = this.props.brick.size);
+        if (this.size > 1) {
+            switch (this.size) {
+                case 6:
+                    this.size -= 2;
+                    break;
+                default:
+                    this.size--;
+            }
+        }
     }
 
     render() {
-        const classes = classnames('item', {
-            'size-1': this.size === 1, // 1
-            'size-2': this.size === 2, // 2
-            'size-3': this.size === 3, // 3
-            'size-4': this.size === 4, // 4
-            'size-5': this.size === 5, // 6
+        const {brick, style} = this.props;
+        const size = this.size || brick.size;
+        const classes = classnames('item', style, {
+            'size-1': size === 1, // 1
+            'size-2': size === 2, // 2
+            'size-3': size === 3, // 3
+            'size-4': size === 4, // 4
+            'size-6': size === 6, // 6
         });
         return (
             <div className={classes} ref={(brick) => {this.brick = brick;}}>
-                <div className="controls">
-                    <button onClick={this.embiggen.bind(this)}><div className="fa fa-plus"/></button>
-                    <button onClick={this.shrunken.bind(this)}><div className="fa fa-minus"/></button>
+                <div className="wrap">
+                    <div className="controls">
+                        <button onClick={this.onEmbiggen.bind(this)}><div className="fa fa-plus"/></button>
+                        <button onClick={this.onShrunken.bind(this)}><div className="fa fa-minus"/></button>
+                    </div>
+                    <h4>{brick.title}</h4>
+                    <div className="content">
+                        <p>This is the content</p>
+                    </div>
+                    <div className="description">This is the description of the component</div>
                 </div>
-                <h4>Title 1</h4>
-                <div className="content">
-                    <p>This is the content</p>
-                </div>
-                <div className="description">This is the description of the component</div>
                 { /*language=CSS*/ }
                 <style jsx>
                 {`
                     .item {
+                        box-sizing: border-box;
+                        min-height: 50%;
+                        background: none;
+                        padding: 4px;
+                        flex-grow: 1;
+                    }
+                    .item > .wrap {
+                        height: 100%;
+                        width: 100%;
                         position: relative;
                         background: #fff;
-                        box-sizing: border-box;
-                        margin: 4px;
-                        -moz-box-sizing: border-box;
-                        -webkit-box-sizing: border-box;
                         box-shadow: 2px 2px 4px 0 #ccc;
-                        flex-grow: 1;
-                        min-height: 50%;
-                        flex-basis: 25%
+                    }
+                    .item {
+                        flex-basis: 33.3333%;
                     }
                     .item.size-2 {
-                        flex-basis: 58.3%;
+                        flex-grow: 1;
+                        flex-basis: 66.6666%;
+                        order: -1;
                     }
                     .item.size-3 {
+                        flex-grow: 1;
                         flex-basis: 100%;
                         order: -1;
                     }
+                    /* If there's a size-4 somewhere, the flex parent has flex-direction: column */
                     .item.size-4 {
-                        flex-basis: 58.3%;
+                        flex-grow: 1;
+                        flex-basis: 100%;
                         min-height: 100%;
+                        order: -1;
+                        width: 66.6666%
                     }
-                    .item.size-5 {
+                    .item.size-6 {
                         flex-basis: 100%;
                         order: -1;
                         min-height: 100%;
+                    }
+                    .item.item-col.size-1 {
+                        width: 33.3333%
                     }
                     .item .controls {
                         position: absolute;
