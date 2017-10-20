@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
+import React from 'react';
 import 'bootstrap/less/bootstrap.less';
 import 'font-awesome/less/font-awesome.less';
 
-import './styles.css';
+import './styles.scss';
 
-import Flex from './Views/Flex';
+import Screen from './Views/Screen';
 
-export default class App extends Component {
-    render() {
-        return <Flex/>;
-    }
-}
+export default () => (
+    <Screen/>
+);

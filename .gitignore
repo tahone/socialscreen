@@ -10,6 +10,10 @@
 # production
 /build
 
+# builds
+/server/build
+/server/build-lib
+
 # misc
 .DS_Store
 .env.local

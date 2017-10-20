@@ -12,6 +12,8 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+const nodeExternals = require('webpack-node-externals');
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -26,6 +28,7 @@ const env = getClientEnvironment(publicUrl);
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
 module.exports = {
+    target: 'node',
     // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
     // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
     devtool: 'cheap-module-source-map',
@@ -34,37 +37,26 @@ module.exports = {
     // The first two entry points enable "hot" CSS and auto-refreshes for JS.
     entry: [
         // We ship a few polyfills by default:
-        require.resolve('./polyfills'),
-        // Include an alternative client for WebpackDevServer. A client's job is to
-        // connect to WebpackDevServer by a socket and get notified about changes.
-        // When you save a file, the client will either apply hot updates (in case
-        // of CSS changes), or refresh the page (in case of JS changes). When you
-        // make a syntax error, this client will display a syntax error overlay.
-        // Note: instead of the default WebpackDevServer client, we use a custom one
-        // to bring better experience for Create React App users. You can replace
-        // the line below with these two lines if you prefer the stock client:
-        // require.resolve('webpack-dev-server/client') + '?/',
-        // require.resolve('webpack/hot/dev-server'),
-        require.resolve('react-dev-utils/webpackHotDevClient'),
+        //require.resolve('./polyfills'),
         // Finally, this is your app's code:
-        paths.appIndexJs
+        paths.serverIndexJs
         // We include the app code last so that if there is a runtime error during
         // initialization, it doesn't blow up the WebpackDevServer client, and
         // changing JS code would still trigger a refresh.
     ],
     output: {
         // Next line is not used in dev but WebpackDevServer crashes without it:
-        path: paths.appBuild,
+        path: paths.serverBuild,
         // Add /* filename */ comments to generated require()s in the output.
         pathinfo: true,
         // This does not produce a real file. It's just the virtual path that is
         // served by WebpackDevServer in development. This is the JS bundle
         // containing code from all our entry points, and the Webpack runtime.
-        filename: 'static/js/bundle.js',
+        filename: 'server.js',
         // There are also additional JS chunk files if you use code splitting.
-        chunkFilename: 'static/js/[name].chunk.js',
+        chunkFilename: 'server.[name].chunk.js',
         // This is the URL that app is served from. We use "/" in development.
-        publicPath: publicPath,
+        //publicPath: publicPath,
         // Point sourcemap entries to original disk location (format as URL on Windows)
         devtoolModuleFilenameTemplate: info =>
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')
@@ -161,7 +153,6 @@ module.exports = {
                     {
                         test: /\.css$/,
                         use: [
-                            require.resolve('style-loader'),
                             {
                                 loader: require.resolve('css-loader'),
                                 options: {
@@ -200,7 +191,6 @@ module.exports = {
                     {
                         test: /\.scss$/,
                         use: [
-                            require.resolve('style-loader'),
                             {
                                 loader: require.resolve('css-loader'),
                                 options: {
@@ -240,7 +230,6 @@ module.exports = {
                     {
                         test: /\.less$/,
                         use: [
-                            require.resolve('style-loader'),
                             {
                                 loader: require.resolve('css-loader'),
                                 options: {
@@ -293,23 +282,11 @@ module.exports = {
         ]
     },
     plugins: [
-        // Makes some environment variables available in index.html.
-        // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-        // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-        // In development, this will be an empty string.
-        new InterpolateHtmlPlugin(env.raw),
-        // Generates an `index.html` file with the <script> injected.
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: paths.appHtml
-        }),
         // Add module names to factory functions so they appear in browser profiler.
         new webpack.NamedModulesPlugin(),
         // Makes some environment variables available to the JS code, for example:
         // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
         new webpack.DefinePlugin(env.stringified),
-        // This is necessary to emit hot updates (currently CSS only):
-        new webpack.HotModuleReplacementPlugin(),
         // Watcher doesn't work well if you mistype casing in a path so we use
         // a plugin that prints an error when you attempt to do this.
         // See https://github.com/facebookincubator/create-react-app/issues/240
@@ -340,5 +317,6 @@ module.exports = {
     // cumbersome.
     performance: {
         hints: false
-    }
+    },
+    externals: [nodeExternals()]
 };

@@ -1,0 +1,62 @@
+.item {
+  box-sizing: border-box;
+  min-height: 50%;
+  background: none;
+  padding: 4px;
+  flex-grow: 1;
+  flex-basis: 33.3333%;
+  &:hover .controls {
+    display: flex;
+  }
+}
+
+.item-row-1 {
+  composes: item;
+}
+.item-col-1 {
+  composes: item;
+  width: 33.3333%
+}
+.item-row-2, .item-col-2 {
+  composes: item;
+  flex-grow: 1;
+  flex-basis: 66.6666%;
+  order: -1;
+}
+.item-row-3, .item-col-3  {
+  composes: item;
+  flex-grow: 1;
+  flex-basis: 100%;
+  order: -1;
+}
+/* If there's a size-4 somewhere, the flex parent has flex-direction: column */
+.item-row-4, .item-col-4 {
+  composes: item;
+  flex-grow: 1;
+  flex-basis: 100%;
+  min-height: 100%;
+  order: -1;
+  width: 66.6666%
+}
+.item-row-6, .item-col-6 {
+  composes: item;
+  flex-basis: 100%;
+  order: -1;
+  min-height: 100%;
+}
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background: #fff;
+  box-shadow: 2px 2px 4px 0 #ccc;
+}
+
+.content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
