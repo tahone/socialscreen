@@ -1,31 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 
-import React from 'react';
-import {renderToString} from 'react-dom/server';
 import Transmit from 'react-transmit';
 
-import {Static} from '../Views/Bricks/Dilbert';
+import {Static as Dilbert} from '../Views/Bricks/Dilbert';
 
-function handleRender(req, res) {
-    // Renders our Hello component into an HTML string
-    Transmit.renderToString(Static).then((response) => {
-        console.log('Transmit', response.reactString, response.reactData);
+function handleRender(req, res, Component) {
+    Transmit.renderToString(Component).then((response) => {
         res.send(response.reactString);
     });
-
-    // Load contents of index.html
-    /*
-    fs.readFile('./index.html', 'utf8', function (err, data) {
-        if (err) throw err;
-
-        // Inserts the rendered React HTML into our main div
-        const document = data.replace(/<div id="app"><\/div>/, `<div id="app">${html}</div>`);
-
-        // Sends the response back to the client
-        res.send(document);
-    });
-    */
 }
 
 const app = express();
@@ -41,12 +24,22 @@ app.use('*', cors({
 
 app.get('/announce', (req, res) => {
     res.json([
-        {url: 'http://localhost:3001', size: 6}
+        {url: 'http://localhost:3001/dilbert1', size: 6},
+        {url: 'http://localhost:3001/dilbert2', size: 3},
+        {url: 'http://localhost:3001/dilbert3', size: 3}
     ]);
 });
 
 // Serve requests with our handleRender function
-app.get('*', handleRender);
+app.get('/dilbert1', (req, res) => {
+    handleRender(req, res, Dilbert)
+});
+app.get('/dilbert2', (req, res) => {
+    handleRender(req, res, Dilbert)
+});
+app.get('/dilbert3', (req, res) => {
+    handleRender(req, res, Dilbert)
+});
 
 // Start server
 app.listen(3001);

@@ -15,7 +15,7 @@ export default class DilbertBrick extends React.Component {
 
     render() {
         return (
-            <img src={this.props.data.url}/>
+            <img src={this.props.data.url} data-date={this.props.date}/>
         );
     }
 }
@@ -25,10 +25,12 @@ const Static = Transmit.createContainer(DilbertBrick, {
     initialVariables: {},
     // Each fragment will be resolved into a prop
     fragments: {
+        date: () => {
+            return Promise.resolve(new Date());
+        },
         data: () => {
             return new Promise((resolve, reject) => {
                 randomDilbert((error, data) => {
-                    console.log('Dilbert', error, data);
                     if (error) {
                         reject(new Error(error));
                     }

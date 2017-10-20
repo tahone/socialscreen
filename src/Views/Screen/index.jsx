@@ -1,5 +1,5 @@
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import _concat from 'lodash/concat';
 import _each from 'lodash/each';
@@ -18,9 +18,10 @@ const announcements = [
 
 @observer
 export default class Screen extends React.Component {
-    batch = [];
 
     @observable bricks = [];
+    @observable currentBricks = [];
+    @observable announcements = [];
 
     constructor(props) {
         super(props);
@@ -36,40 +37,48 @@ export default class Screen extends React.Component {
         });
 
         let bricks = [];
-        Promise.all(promises).then((responses) => {
+        Promise.all(promises).then(action((responses) => {
             _each(responses, (response) => {
                 if (_isArray(response)) {
                     bricks = _concat(bricks, response);
                 }
-            })
-            this.bricks = bricks;
-        });
+            });
+            this.announcements = bricks;
+            this.getBricks();
+        }));
     }
 
+    componentDidMount() {
+        setInterval(() => {
+            this.getBricks();
+        }, 300000);
+    }
+
+    @action
     getBricks() {
-        if (this.batch.length === 0) {
-            this.batch = this.bricks;
+        if (this.bricks.length === 0) {
+            this.bricks = this.announcements;
         }
         let size = 0;
-        const copy = this.batch.slice();
+        const copy = this.bricks.slice();
         let bricks = [];
         let position = 0;
         const examine = (brick, i) => {
             position += i;
             if (size + brick.size <= 6) {
-                bricks.push(this.batch[i]);
+                bricks.push(this.bricks[i]);
                 size += brick.size;
             }
         };
         while (size < 6 && position < copy.length) {
             copy.map(examine);
         }
-        this.batch = _xorBy(bricks, this.batch, 'id');
-        return bricks;
+        this.currentBricks = bricks;
+        this.bricks = _xorBy(bricks, this.bricks, 'url');
     }
 
     next() {
-        this.forceUpdate();
+        this.getBricks();
     }
 
     prev() {
@@ -77,7 +86,7 @@ export default class Screen extends React.Component {
     }
 
     render() {
-        const bricks = this.getBricks();
+        const bricks = toJS(this.currentBricks);
         const col = !!_filter(bricks, {size: 4}).length;
         return (
             <div className={col ? styles.flexCol : styles.flexRow}>
