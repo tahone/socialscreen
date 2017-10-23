@@ -69,6 +69,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "server": "concurrently \"NODE_ENV=development webpack --config config/webpack.server.dev.js --watch\" \"nodemon build-server/server.js\"",
+    "all": "concurrently \"node scripts/start.js\" \"NODE_ENV=development webpack --config config/webpack.server.dev.js --watch\" \"nodemon build-server/server.js\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
