@@ -1,6 +1,4 @@
 import React from 'react';
-import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
 import Transmit from 'react-transmit';
 
 import randomDilbert from 'random-dilbert';
