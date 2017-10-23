@@ -22,7 +22,7 @@ export default class BaseBrick extends React.Component {
                 response.text().then((content) => {
                     this.content = content;
                 });
-            }));
+            })).catch(console.log);
         }
     }
 
