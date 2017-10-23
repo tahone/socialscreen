@@ -11,10 +11,7 @@ import Brick from '../BaseBrick'
 
 import styles from './styles.scss';
 
-
-const announcements = [
-    {url: 'http://localhost:3001/announce'}
-];
+import announcements from '../../announcements.json';
 
 @observer
 export default class Screen extends React.Component {
@@ -31,7 +28,7 @@ export default class Screen extends React.Component {
     componentWillMount() {
         const promises = [];
         _each(announcements, (announce) => {
-            promises.push(fetch(announce.url).then((response) => {
+            promises.push(fetch(announce).then((response) => {
                 return response.json();
             }));
         });
