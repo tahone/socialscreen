@@ -56,6 +56,7 @@ export default class Screen extends React.Component {
 
     @action
     getBricks() {
+        this.currentBricks = [];
         if (this.bricks.length === 0) {
             this.bricks = this.announcements;
         }
@@ -73,8 +74,8 @@ export default class Screen extends React.Component {
         while (size < 6 && position < copy.length) {
             copy.map(examine);
         }
-        this.currentBricks = bricks;
-        this.bricks = _xorBy(bricks, this.bricks, 'url');
+        this.currentBricks.replace(bricks);
+        this.bricks.replace(_xorBy(this.currentBricks.slice(), this.bricks.slice(), 'url'));
     }
 
     next() {
@@ -86,7 +87,7 @@ export default class Screen extends React.Component {
     }
 
     render() {
-        const bricks = toJS(this.currentBricks);
+        const bricks = this.currentBricks.slice();
         const col = !!_filter(bricks, {size: 4}).length;
         return (
             <div className={col ? styles.flexCol : styles.flexRow}>
@@ -99,10 +100,10 @@ export default class Screen extends React.Component {
                 {bricks.map((brick, i) => {
                     return (
                         <Brick
-                            key={i}
+                            key={brick.url}
                             size={brick.size}
                             type={col ? 'col' : 'row'}
-                            brick={brick}
+                            brick={toJS(brick)}
                         />
                     );
                 })}
