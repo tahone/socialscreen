@@ -51,7 +51,7 @@ export default class Screen extends React.Component {
     componentDidMount() {
         setInterval(() => {
             this.getBricks();
-        }, 300000);
+        }, 60000);
     }
 
     @action
