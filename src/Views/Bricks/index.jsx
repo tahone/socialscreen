@@ -11,11 +11,21 @@ export default class BaseBrick extends React.Component {
         size: 1
     };
 
-    @observable content = '';
+    @observable component = null;
+    @observable content = null;
 
     constructor(props) {
         super(props);
-        this.getContent();
+        props.component ? this.getComponent() : this.getContent();
+    }
+
+    getComponent() {
+        import(`./${this.props.component}`)
+            .then(action(module => {
+                console.log('Component', module);
+                this.component = React.createElement(module.default, this.props);
+            }))
+            .catch(console.log);
     }
 
     getContent() {
@@ -30,9 +40,10 @@ export default class BaseBrick extends React.Component {
     }
 
     render() {
-        const {brick, type} = this.props;
+        const {component, brick, type} = this.props;
         const size = this.props.size || (brick && brick.size) || 1;
-        const content = brick.url ? this.content : brick.component;
+        const content = component ? this.component : this.content;
+        console.log('Render brick', this, content);
         return (
             <div className={styles[`item-${type}-${size}`]} ref={(brick) => {this.brick = brick;}}>
                 <div className={styles.wrapper}>
