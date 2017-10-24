@@ -9,7 +9,7 @@ import _isArray from 'lodash/isArray';
 import _isString from 'lodash/isString';
 import _map from 'lodash/map';
 
-import Brick from '../BaseBrick'
+import Brick from '../Bricks'
 
 import styles from './styles.scss';
 
@@ -18,34 +18,23 @@ import announcements from '../../bricks.js';
 @observer
 export default class Screen extends React.Component {
 
+    @observable config = [];
     @observable brickStack = [];
     @observable currentBricks = [];
     availableBricks = [];
 
     componentWillMount() {
-        const promises = [];
-        const urls = _filter(announcements, (item) => {
-            return _isString(item);
-        });
-        _each(urls, (url) => {
-            promises.push(fetch(url).then((response) => {
-                return response.json();
-            }));
-        });
+        this.fetchConfig();
+    }
 
-        let bricks = _map(_difference(announcements, urls), (component) => {
-            return {component, size: component.props.size || 1};
-        });
-        Promise.all(promises).then((responses) => {
-            _each(responses, (response) => {
-                if (_isArray(response)) {
-                    bricks = _concat(bricks, response);
-                }
-            });
-            console.log('Set available bricks', bricks);
-            this.availableBricks = bricks;
+    fetchConfig() {
+        console.log(`Fetching config from ${process.env.REACT_APP_SERVER}`);
+        fetch(process.env.REACT_APP_SERVER).then((response) => {
+            return response.json();
+        }).then(action((json) => {
+            this.availableBricks = json;
             this.getBricks();
-        });
+        })).catch(console.log);
     }
 
     componentDidMount() {
@@ -84,17 +73,16 @@ export default class Screen extends React.Component {
         let size = 0;
         const copy = this.brickStack.slice();
         let bricks = [];
-        let position = 0;
         const examine = (brick, i) => {
-            position += i;
-            if (size + brick.size <= 6) {
+            const brickSize = brick.size || brick.props.size;
+            if (size + brickSize <= 6) {
                 bricks.push(this.brickStack[i]);
-                size += brick.size;
+                size += brickSize;
             }
         };
-        while (size < 6 && position < copy.length) {
-            copy.map(examine);
-        }
+        _each(copy, (brick, i) => {
+            examine(brick, i);
+        });
         console.log('Selected', bricks);
         this.currentBricks.replace(bricks);
         this.brickStack.replace(_difference(this.brickStack.slice(), bricks));
@@ -126,10 +114,10 @@ export default class Screen extends React.Component {
                     if (brick.component) {
                         return (
                             <Brick
+                                {...brick.props}
                                 key={`${new Date()}-${i}`}
-                                size={brick.size}
                                 type={col ? 'col' : 'row'}
-                                brick={brick}
+                                component={brick.component}
                             />
                         );
                     }
