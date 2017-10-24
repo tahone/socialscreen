@@ -1,19 +1,13 @@
 import React from 'react';
 import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import _concat from 'lodash/concat';
 import _difference from 'lodash/difference';
 import _each from 'lodash/each';
 import _filter from 'lodash/filter';
-import _isArray from 'lodash/isArray';
-import _isString from 'lodash/isString';
-import _map from 'lodash/map';
 
 import Brick from '../Bricks'
 
 import styles from './styles.scss';
-
-import announcements from '../../bricks.js';
 
 @observer
 export default class Screen extends React.Component {
