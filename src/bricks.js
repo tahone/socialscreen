@@ -4,5 +4,5 @@ import Weather from './Views/Bricks/Weather';
 
 export default [
     'http://localhost:3001/announce',
-    <Weather size={2}/>
+    <Weather size={1}/>
 ];
