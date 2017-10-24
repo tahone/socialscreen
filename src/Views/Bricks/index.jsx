@@ -43,7 +43,6 @@ export default class BaseBrick extends React.Component {
         const {component, brick, type} = this.props;
         const size = this.props.size || (brick && brick.size) || 1;
         const content = component ? this.component : this.content;
-        console.log('Render brick', this, content);
         return (
             <div className={styles[`item-${type}-${size}`]} ref={(brick) => {this.brick = brick;}}>
                 <div className={styles.wrapper}>
