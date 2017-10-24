@@ -22,11 +22,12 @@ app.use('*', cors({
     origin: /.+/
 }));
 
-app.get('/announce', (req, res) => {
+app.get('/', (req, res) => {
     res.json([
         {url: 'http://localhost:3001/dilbert1', size: 6},
         {url: 'http://localhost:3001/dilbert2', size: 3},
-        {url: 'http://localhost:3001/dilbert3', size: 3}
+        {url: 'http://localhost:3001/dilbert3', size: 3},
+        {component: 'Weather', props: {apiKey: '', size: 1}}
     ]);
 });
 
