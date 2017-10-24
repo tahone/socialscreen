@@ -49,9 +49,28 @@ export default class Screen extends React.Component {
     }
 
     componentDidMount() {
-        setInterval(() => {
+        this.setInterval();
+    }
+
+    setInterval() {
+        console.log('Running...');
+        this.interval = setInterval(() => {
             this.getBricks();
         }, 60000);
+    }
+
+    clearInterval() {
+        console.log('Paused...');
+        clearInterval(this.interval);
+        this.interval = null;
+    }
+
+    pause() {
+        if (this.interval) {
+            this.clearInterval();
+        } else {
+            this.setInterval();
+        }
     }
 
     @action
@@ -96,7 +115,7 @@ export default class Screen extends React.Component {
         const col = !!_filter(bricks, {size: 4}).length;
         console.log('Render bricks', bricks);
         return (
-            <div className={col ? styles.flexCol : styles.flexRow}>
+            <div className={col ? styles.flexCol : styles.flexRow} onClick={() => this.pause()}>
                 <div className={styles.arrowPrev}>
                     <i className="fa fa-chevron-left fa-5x" onClick={this.prev.bind(this)}/>
                 </div>
