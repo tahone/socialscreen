@@ -13,7 +13,7 @@ export default class DilbertBrick extends React.Component {
 
     render() {
         return (
-            <img style={{minHeight: '100%', minWidth: '100%', padding: '16px'}} src={this.props.data.url} data-date={this.props.date}/>
+            <img style={{objectFit: 'contain', height: '100%', width: '100%'}} src={this.props.data.url} data-date={this.props.date}/>
         );
     }
 }
