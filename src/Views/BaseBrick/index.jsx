@@ -1,12 +1,15 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import _isString from 'lodash/isString';
 
 import styles from './styles.scss';
 
 @observer
 export default class BaseBrick extends React.Component {
-    size = 1;
+    static defaultProps = {
+        size: 1
+    };
 
     @observable content = '';
 
@@ -17,7 +20,7 @@ export default class BaseBrick extends React.Component {
 
     getContent() {
         const {brick} = this.props;
-        if (brick) {
+        if (brick && brick.url) {
             fetch(brick.url).then(action((response) => {
                 response.text().then((content) => {
                     this.content = content;
@@ -28,11 +31,15 @@ export default class BaseBrick extends React.Component {
 
     render() {
         const {brick, type} = this.props;
-        const size = this.size || (brick && brick.size) || 1;
+        const size = this.props.size || (brick && brick.size) || 1;
+        const content = brick.url ? this.content : brick.component;
         return (
             <div className={styles[`item-${type}-${size}`]} ref={(brick) => {this.brick = brick;}}>
                 <div className={styles.wrapper}>
-                    <div className={styles.content} dangerouslySetInnerHTML={{ __html: this.content }}></div>
+                    {_isString(content) ?
+                        <div className={styles.content} dangerouslySetInnerHTML={{ __html: this.content }}></div> :
+                        <div className={styles.content}>{content}</div>
+                    }
                 </div>
             </div>
         )
